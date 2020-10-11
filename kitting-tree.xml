@@ -1,0 +1,160 @@
+<root main_tree_to_execute = "MainTree">
+
+    <BehaviorTree ID="MainTree">
+        <Sequence name="build a gearbox kit">
+            <!--            <SubTree ID="prepare navigation and arm" />-->
+            <!--            <SubTree ID="go pick large gear" />-->
+            <SubTree ID="go insert large gear" name="" />
+            <!--            <SubTree ID="go place machined large gear" />-->
+            <!--            <SubTree ID="go pick small gear" />-->
+            <!--            <SubTree ID="go place small gear" />-->
+            <!--            <SubTree ID="go pick gearbox top" />-->
+            <!--            <SubTree ID="go place gearbox top" />-->
+            <!--            <SubTree ID="go pick gearbox bottom" />-->
+            <!--            <SubTree ID="go place gearbox bottom" />-->
+
+            <!--            <SubTree ID="ask" what="Press Enter to pick 1st screw..."/>-->
+            <!--            <SubTree name="go pick first screw" ID="go pick screw" />-->
+            <SubTree ID="go pick screw" name="go pick first screw"/>
+            <!--            <SubTree ID="ask" what="Press Enter to place 1st screw..."/>-->
+            <!--            <SubTree name="go place first screw" ID="go place screw" />-->
+            <SubTree ID="go place screw" name="go place first screw"/>
+            <!--            <SubTree ID="ask" what="Press Enter to pick 2nd screw..."/>-->
+            <!--            <SubTree name="go pick second screw" ID="go pick screw" />-->
+            <!--            <SubTree ID="ask" what="Press Enter to place 2nd screw..."/>-->
+            <!--            <SubTree name="go place second screw" ID="go place screw" />-->
+
+            <!--            <SubTree ID="go pick caddy" />-->
+            <!--            <SubTree ID="go drop off caddy" />-->
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="go insert large gear">
+        <Fallback name="go insert large gear">
+            <Sequence name="go insert large gear">
+                <RetryUntilSuccesful num_attempts="3" name="">
+                    <Action ID="move to" place="chuck place" name="move to see chuck" />
+                </RetryUntilSuccesful>
+
+                <RetryUntilSuccesful num_attempts="3" name="">
+                    <Sequence name="">
+                        <Sequence name="detect chuck">
+                            <Action ID="lift torso" name="" />
+                            <Action ID="look at chuck roughly" name="" />
+                            <Action ID="detect chuck" output="{object pose}" name="" />
+                        </Sequence>
+                        <Fallback name="insert large gear">
+                            <Sequence name="insert large gear">
+                                <Action ID="convert to insertion pose" name="" from="{object pose}" output="{insertion pose}" />
+                                <Action ID="scan scene" name="scan scene for collision avoidance" />
+                                <Action ID="attach large gear to scene" name="" />
+                                <Action ID="look at" name="look at chuck" pose="{object pose}" />
+                                <Action ID="reach" name="approach door" pose="{insertion pose}" shift_x="-0.35" shift_y="-0.12" shift_z="0.2" />
+                                <Action ID="reach" name="prepare to insert" pose="{insertion pose}" shift_y="-0.17" />
+                                <Action ID="trial and error insert" name="" pose="{insertion pose}" />
+                                <Action ID="remove large gear from scene" name="" />
+                                <Action ID="reach" name="back to prepare to insert" pose="{insertion pose}" shift_y="-0.17" />
+                                <Action ID="reach" name="back to approach for door" pose="{insertion pose}" shift_x="-0.35" shift_y="0.12" shift_z="0.2" />
+                                <Action ID="retreat arm" name="" />
+                            </Sequence>
+
+                            <ForceFailure name="reset arm">
+                                <Action ID="retreat arm" name="" />
+                            </ForceFailure>
+                        </Fallback>
+                    </Sequence>
+                </RetryUntilSuccesful>
+            </Sequence>
+
+            <Action ID="ask" name="" what="unable insert large gear" />
+        </Fallback>
+    </BehaviorTree>
+
+    <BehaviorTree ID="go pick screw">
+        <!--        <Action name="go pick first screw" ID="go pick screw" />-->
+        <Fallback name="go pick screw">
+
+            <Sequence name="go pick screw">
+                <RetryUntilSuccesful num_attempts="3" name="">
+                    <Action ID="move to" place="screw station" name="move to screw station" />
+                </RetryUntilSuccesful>
+
+                <RetryUntilSuccesful num_attempts="3" name="">
+                    <Sequence name="">
+                        <Sequence name="detect screw">
+                            <Action ID="lift torso" name="" />
+                            <Action ID="look at table" name="" />
+                            <Action ID="detect screw" output="{object pose}" name="" />
+                        </Sequence>
+                        <Fallback name="pick screw">
+                            <Sequence name="pick screw">
+                                <Action ID="convert to grasp pose" name="" from="{object pose}" output="{grasp pose}" />
+                                <Action ID="scan scene" name="scan scene for collision avoidance" />
+                                <!--                                <Action ID="attach object" object_name="screw" name="" />-->
+                                <Action ID="look at" name="look at screw" pose="{object pose}" />
+                                <Action ID="open gripper" name="close griper slightly" position="0.035" />
+                                <!--                                <Action ID="reach" name="approach for grasp pose" pose="{grasp pose}" shift_z="0.2" />-->
+                                <Action ID="reach" name="approach for grasp pose" pose="{grasp pose}" shift_z="0.1" />
+                                <Action ID="allow partial collision" where="{object pose}" width="0.06" padding="0.03" />
+                                <Action ID="reach" name="reach for grasp pose" pose="{grasp pose}" shift_z="-0.01" />
+                                <Action ID="close gripper" name="grasp screw" />
+                                <Condition ID="check grasped" name="check if grasped" />
+                                <Action ID="reach" name="back to approach pose" pose="{grasp pose}" shift_z="0.1" />
+                                <!--                                <Action ID="reach" name="back to approach pose" pose="{grasp pose}" shift_z="0.2" />-->
+                                <Action ID="retreat arm" name="" />
+                            </Sequence>
+
+                            <ForceFailure name="reset arm">
+                                <Action ID="retreat arm" name="" />
+                            </ForceFailure>
+                        </Fallback>
+                    </Sequence>
+                </RetryUntilSuccesful>
+            </Sequence>
+
+            <Action ID="ask" name="" what="unable pick screw" />
+        </Fallback>
+    </BehaviorTree>
+
+
+    <BehaviorTree ID="go place screw">
+        <!--        <Action name="go place first screw" ID="go place screw" />-->
+        <Fallback name="go place screw" >
+
+            <Sequence name="go place screw">
+                <RetryUntilSuccesful num_attempts="3" name="">
+                    <Action ID="move to" place="caddy station" name="move to caddy station" />
+                </RetryUntilSuccesful>
+
+                <RetryUntilSuccesful num_attempts="3" name="">
+                    <Sequence name="">
+                        <Sequence name="detect screw compartment">
+                            <Action ID="lift torso" name="" />
+                            <Action ID="look at table" name=""/>
+                            <Action ID="detect caddy" name="detect screw compartment" part="screw compartment" output="{object pose}" />
+                        </Sequence>
+
+                        <Fallback name="place screw into caddy">
+                            <Sequence name="place screw into caddy">
+                                <Action ID="convert to grasp pose" name="convert to place pose" from="{object pose}" shift_z="0.06" output="{place pose}" />
+                                <Action ID="scan scene" name="scan scene for collision avoidance" />
+                                <!--                                <Action ID="attach object" object_name="screw" name="" />-->
+                                <Action ID="look at" name="look at screw compartment" pose="{object pose}" />
+                                <Action ID="reach" name="approach for place pose" pose="{place pose}" shift_z="0.1" />
+                                <Action ID="reach" name="reach for place pose" pose="{place pose}" />
+                                <Action ID="open gripper" name="release screw" />
+                                <Action ID="reach" name="back to approach pose" pose="{place pose}" shift_z="0.1"/>
+                                <Action ID="retreat arm" name="" />
+                            </Sequence>
+                            <ForceFailure name="reset arm">
+                                <Action ID="retreat arm" name="" />
+                            </ForceFailure>
+                        </Fallback>
+                    </Sequence>
+                </RetryUntilSuccesful>
+            </Sequence>
+
+            <Action ID="ask" what="unable to place screw" name="" />
+        </Fallback>
+    </BehaviorTree>
+</root>

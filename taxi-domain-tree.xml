@@ -1,0 +1,37 @@
+<root main_tree_to_execute="MainTree">
+
+    <BehaviorTree ID="MainTree">
+        <Sequence name="go deliver passenger">
+            <SubTree ID="go pick up passenger" name="" />
+            <SubTree ID="go drop off passenger" name="" />
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="go pick up passenger">
+        <Sequence name="go pick up passenger">
+            <Sequence name="navigate to passenger">
+                <Action ID="move right" name="" />
+                <Action ID="move right" name="" />
+                <Action ID="move right" name="" />
+                <Action ID="move up" name="" />
+                <Action ID="move up" name="" />
+                <Action ID="move left" name="" />
+            </Sequence>
+            <Action ID="pick up" name="pick up passenger" />
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="go drop off passenger">
+        <Sequence name="go drop off passenger">
+            <Sequence name="navigate to destination">
+                <Action ID="move right" name="" />
+                <Action ID="move down" name="" />
+                <Action ID="move down" name="" />
+                <Action ID="move left" name="" />
+                <Action ID="move left" name="" />
+                <Action ID="move left" name="" />
+            </Sequence>
+            <Action ID="drop off" name="drop off passenger" />
+        </Sequence>
+    </BehaviorTree>
+</root>
