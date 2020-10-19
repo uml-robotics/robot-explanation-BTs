@@ -80,7 +80,7 @@ public:
                 a = "My subgoal is to " + subgoal + ".";
             }
         }
-        else if(q == "How do you achieve your subgoal?" || q== "What are the steps for your subgoal?") {
+        else if (q == "How do you achieve your subgoal?" || q== "What are the steps for your subgoal?") {
             BT::TreeNode* tree_parent = behavior_tracker.get_tree_parent();
             if (tree_parent == nullptr)
                 a = "Sorry. I don't have a subgoal.";
@@ -99,13 +99,132 @@ public:
 
             a = "My goal is to " + goal + ".";
         }
-        else if(q == "How do you achieve your goal?" || q == "What are the steps for your goal") {
+        else if (q == "How do you achieve your goal?" || q == "What are the steps for your goal") {
             std::string goal = behavior_tracker.get_overall_goal_node()->name();
             std::vector<BT::TreeNode*> steps = find_steps(tree.root_node);
             a = "To achieve the goal \"" + goal + "\", I need to do " + std::to_string(steps.size()) + " steps. ";
             for (int i = 0; i < steps.size(); ++i) {
                 a += std::to_string(i+1) + ". " + steps.at(i)->name() + ". ";
             }
+        }
+        else if (q == "What went wrong?") {
+            BT::TreeNode *running_node = behavior_tracker.get_running_node();
+
+            bool is_wrong = false;
+            bool is_fell_back = false;
+
+            BT::FallbackNode* fallback_node = nullptr;
+
+            BT::TreeNode *p = running_node->getParent();
+            while (p != nullptr && p->type() != BT::NodeType::SUBTREE) {
+                ROS_INFO_STREAM(p->short_description());
+
+                bool is_fallback_node = (dynamic_cast<BT::FallbackNode*>(p) != nullptr);
+                if (is_fallback_node) {
+                    //
+                    // Fallback node
+                    //
+                    fallback_node = dynamic_cast<BT::FallbackNode*>(p);
+                    ROS_INFO_STREAM("Fallback node found: " << fallback_node->short_description());
+                    if (fallback_node->child(0)->status() == BT::NodeStatus::FAILURE) {
+                        is_wrong = true;
+                        is_fell_back = true;
+
+                        a = "I could not " + fallback_node->short_description() + " because ";
+
+                        // find the failed child
+                        const BT::TreeNode* failed_child;
+                        BT::applyRecursiveVisitorSelectively(fallback_node, [&failed_child](const BT::TreeNode* node) -> bool {
+                            if (node->has_failed() && (node->type() == BT::NodeType::CONDITION || node->type() == BT::NodeType::ACTION)) {
+                                failed_child = node;
+                                return true;
+                            }
+                            return false;
+                        });
+
+                        if (failed_child->getParent() != nullptr) {
+                            if (failed_child->getParent()->short_description() != fallback_node->short_description()) {
+                                a += "I was unable to " + failed_child->getParent()->short_description() + " as ";
+                            }
+                        }
+
+                        a += failed_child->short_description() + " failed.";
+
+                        break;
+                    }
+                }
+
+                bool is_retry_node = (dynamic_cast<BT::RetryNode*>(p) != nullptr);
+                if (is_retry_node) {
+                    auto retry_node = dynamic_cast<BT::RetryNode *>(p);
+                    ROS_INFO_STREAM("Retry node found: " << retry_node->short_description());
+
+                    if (retry_node->is_retrying()) {
+                        is_wrong = true;
+
+                        // check if have non-null parent
+                        BT::TreeNode *rp = retry_node->getParent();
+                        while (rp == nullptr) {
+                            rp = rp->getParent();
+                        }
+
+                        if (rp != nullptr) {
+                            a = "I am retrying for attempt " + std::to_string(retry_node->n_th_retry()) + " to " + rp->short_description() + ". ";
+
+                            // find the failed child
+                            const BT::TreeNode* failed_child;
+                            BT::applyRecursiveVisitorSelectively(retry_node, [&failed_child](const BT::TreeNode* node) -> bool {
+                                if (node->has_failed() && (node->type() == BT::NodeType::CONDITION || node->type() == BT::NodeType::ACTION)) {
+                                    failed_child = node;
+                                    return true;
+                                }
+                                return false;
+                            });
+
+                            auto fp = failed_child->getParent();
+                            while (fp->name().empty()) {
+                                fp = fp->getParent();
+                            }
+
+                            a += "I could not " + fp->short_description() + " because " + failed_child->short_description() + " failed.";;
+
+                            break;
+                        }
+                    }
+                }
+                p = p->getParent();
+            }
+
+            if (is_fell_back) {
+                // find if there is a parent Retry node retrying. If so, say that
+
+                p = fallback_node->getParent();
+                while (p != nullptr && p->type() != BT::NodeType::SUBTREE) {
+
+                    bool is_retry_node = (dynamic_cast<BT::RetryNode*>(p) != nullptr);
+                    if (is_retry_node) {
+                        auto retry_node = dynamic_cast<BT::RetryNode *>(p);
+                        ROS_INFO_STREAM("Retry node found: " << retry_node->short_description());
+
+                        if (retry_node->is_retrying()) {
+
+                            // check if have non-null parent
+                            BT::TreeNode *rp = retry_node->getParent();
+                            while (rp == nullptr) {
+                                rp = rp->getParent();
+                            }
+
+                            if (rp != nullptr) {
+                                a += " I am retrying for attempt " + std::to_string(retry_node->n_th_retry()) + " to " + rp->short_description() + ".";
+                            }
+                        }
+                    }
+                    p = p->getParent();
+                }
+            }
+
+            if ( ! is_wrong)
+                a = "Nothing went wrong.";
         }
         else if (boost::starts_with(q, "Can you")) {
             std::string asked = q.substr(8, q.size() - 8 - 1);
