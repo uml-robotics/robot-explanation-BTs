@@ -2,7 +2,7 @@
 
 This reposotory contains code and the behavior trees in XML for the following manuscript submitted to ACM Transactions on Human-Robot Interaction (THRI).
 
- - Zhao Han, Jordan Allspaw, and Holly A. Yanco. __Building The Foundation of Robot Explanation Generation Using Behavior Trees__.
+ - Zhao Han, Daniel Giger, Jordan Allspaw, Michael S. Lee, Henny Admoni, and Holly A. Yanco. __Building The Foundation of Robot Explanation Generation Using Behavior Trees__.
 
 ## Code
 
