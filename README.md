@@ -1,12 +1,14 @@
 # Robot Explanation Generation Using Behavior Trees (BTs)
 
-This reposotory contains code and the behavior trees in XML for the following manuscript submitted to ACM Transactions on Human-Robot Interaction (THRI).
+This reposotory contains code and the behavior trees in XML for the following paper accepted to ACM Transactions on Human-Robot Interaction (THRI).
 
  - Zhao Han, Daniel Giger, Jordan Allspaw, Michael S. Lee, Henny Admoni, and Holly A. Yanco. __Building The Foundation of Robot Explanation Generation Using Behavior Trees__.
 
+Everything other than the code is available at https://cs.uml.edu/~zhan/#re-bt.
+
 ## Code
 
-`ExplainableBT.h` contains all the proposed algorithms, implemented in C++ using the [BehaviorTree.CPP](https://www.behaviortree.dev/) library. Pease read the header comment for its usage.
+`ExplainableBT.h` contains all the proposed algorithms, implemented in C++ using the [BehaviorTree.CPP](https://www.behaviortree.dev/) library. Please read the header comment for its usage.
 
  - It also depends on `BehaviorTracker.h`, which tracks the node currently ticking in order to generate explanations related to it.
 
