@@ -12,5 +12,5 @@ int main (int argc, char **argv)
 {
    ROS_INFO("Explainble BT server.");
 
-   return 0
+   return 0;
 }
