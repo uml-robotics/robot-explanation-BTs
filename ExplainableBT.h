@@ -2,7 +2,7 @@
 // ExplainableBT class contains all the proposed algorithms in the paper.
 // The only input needed is a behavior tree. Please refer to 
 //   https://www.behaviortree.dev/ to get familiar with it.
-// Please use our fork https://github.com/uml-robotics/BehaviorTree.CPP asked
+// Please use our fork https://github.com/uml-robotics/BehaviorTree.CPP because
 //   it contains modifications that make the algorithms easy to reason about.
 // You should also be familiar with ROS.
 
