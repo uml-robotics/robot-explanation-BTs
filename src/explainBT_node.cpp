@@ -5,15 +5,25 @@
 #include <behaviortree_cpp_v3/bt_factory.h>
 #include "explainBT/Explain.h"
 #include "ExplainableBT.h"
-using namespace BT;
+#include "dummy_nodes.h"
 
+using namespace BT;
 
 int main (int argc, char **argv)
 {
-   ROS_INFO("Explainble BT node started.");
-   
-   
    BehaviorTreeFactory factory;
+
+   using namespace DummyNodes;
+   factory.registerNodeType<ApproachObject>("ApproachObject");
+   factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
+   GripperInterface gripper;
+   factory.registerSimpleAction("OpenGripper", 
+                                 std::bind(&GripperInterface::open, &gripper));
+   factory.registerSimpleAction("CloseGripper", 
+                                 std::bind(&GripperInterface::close, &gripper));
+   
+   ROS_INFO("Explainble BT node started.");
+      
    auto tree = factory.createTreeFromFile("./my_tree.xml");
    ROS_INFO("BT created from file.");
 
