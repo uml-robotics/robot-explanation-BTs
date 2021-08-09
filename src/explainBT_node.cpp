@@ -11,7 +11,9 @@ using namespace std;
 int main (int argc, char **argv)
 {
    ROS_INFO("Explainble BT node started.");
-
+   
+   
+   BehaviorTreeFactory factory;
    auto tree = factory.createTreeFromFile("./my_tree.xml");
    ROS_INFO("BT created from file.");
 
