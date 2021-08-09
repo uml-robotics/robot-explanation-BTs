@@ -10,7 +10,10 @@ using namespace std;
 
 int main (int argc, char **argv)
 {
-   ROS_INFO("Explainble BT server.");
+   ROS_INFO("Explainble BT node started.");
+
+   auto tree = factory.createTreeFromFile("./my_tree.xml");
+   ROS_INFO("BT created from file.");
 
    return 0;
 }
