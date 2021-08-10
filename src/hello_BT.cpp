@@ -32,7 +32,7 @@ int main()
 
     // IMPORTANT: when the object "tree" goes out of scope, all the 
     // TreeNodes are destroyed
-    auto tree = factory.createTreeFromFile("./my_tree.xml");
+    auto tree = factory.createTreeFromFile("/home/tammer/explainBT/src/my_tree.xml");
 
     // To "execute" a Tree you need to "tick" it.
     // The tick is propagated to the children based on the logic of the tree.
