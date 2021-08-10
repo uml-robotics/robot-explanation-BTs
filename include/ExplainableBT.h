@@ -8,7 +8,7 @@
 
 #include <ros/ros.h>
 #include <behaviortree_cpp_v3/bt_factory.h>
-#include "explainBT/Explain.h"
+#include "explain_bt/Explain.h"
 #include "BehaviorTracker.h"
 #include <boost/algorithm/string/predicate.hpp> // starts_with
 
@@ -57,7 +57,7 @@ public:
         return tree.root_node->executeTick();
     }
 
-    bool explain_callback(explainBT::Explain::Request &req, explainBT::Explain::Response &res) {
+    bool explain_callback(explain_bt::Explain::Request &req, explain_bt::Explain::Response &res) {
         const std::string q =  req.what; // question
         std::string a; // answer
 
