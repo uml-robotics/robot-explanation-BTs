@@ -25,21 +25,21 @@ int main (int argc, char **argv)
    auto tree = factory.createTreeFromFile("/root/catkin_ws/src/explain_bt/src/my_tree.xml");
    ROS_INFO("BT created from file.");
 
-   ExplainableBT explainable_bt(tree);
+   ExplainableBT explainable_tree(tree);
 
    ros::init(argc, argv, "explainable_bt_server");
    ros::NodeHandle n;
-   ros::ServiceServer service = n.advertiseService("explainable_bt", &ExplainableBT::explain_callback, &explainable_bt);
+   ros::ServiceServer service = n.advertiseService("explainable_bt", &ExplainableBT::explain_callback, &explainable_tree);
    ros::AsyncSpinner spinner(1); // Use 1 thread
    spinner.start();
    
-   ROS_INFO("Explainble BT node started.");
+   ROS_INFO("Explainable BT node started.");
 
    // This executeTick method runs the BT without explainability
    // tree.root_node->executeTick();
    
    // This option runs the BT with explainability
-   explainable_bt.execute();
+   explainable_tree.execute();
 
    ros::waitForShutdown();
 
