@@ -1,4 +1,5 @@
 #include "dummy_nodes.h"
+#include "countdown.h"
 
 // This function must be implemented in the .cpp file to create
 // a plugin that can be loaded at run-time
@@ -12,6 +13,7 @@ namespace DummyNodes
 
 BT::NodeStatus CheckBattery()
 {
+    countdown(10);
     std::cout << "[ Battery: OK ]" << std::endl;
     return BT::NodeStatus::SUCCESS;
 }
@@ -19,12 +21,14 @@ BT::NodeStatus CheckBattery()
 BT::NodeStatus GripperInterface::open()
 {
     _opened = true;
+    countdown(10);
     std::cout << "GripperInterface::open" << std::endl;
     return BT::NodeStatus::SUCCESS;
 }
 
 BT::NodeStatus GripperInterface::close()
 {
+    countdown(10);
     std::cout << "GripperInterface::close" << std::endl;
     _opened = false;
     return BT::NodeStatus::SUCCESS;
@@ -32,6 +36,7 @@ BT::NodeStatus GripperInterface::close()
 
 BT::NodeStatus ApproachObject::tick()
 {
+    countdown(10);
     std::cout << "ApproachObject: " << this->name() << std::endl;
     return BT::NodeStatus::SUCCESS;
 }

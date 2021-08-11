@@ -118,9 +118,9 @@ include_directories(
 )
 
 ## Declare a C++ library
-add_library(dummy_nodes STATIC
-  src/dummy_nodes.cpp
-)
+#add_library(dummy_nodes STATIC
+#  src/dummy_nodes.cpp
+#)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -130,7 +130,7 @@ add_library(dummy_nodes STATIC
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/${PROJECT_NAME}_node.cpp)
+add_executable(${PROJECT_NAME}_node src/countdown.cpp src/dummy_nodes.cpp src/${PROJECT_NAME}_node.cpp)
 #add_executable(hello_BT src/hello_BT.cpp)
 
 
@@ -147,9 +147,9 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_node_EXPORTED_TARGETS} $
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
-   dummy_nodes
    ${catkin_LIBRARIES}
 )
+
 #target_link_libraries(hello_BT
 #   ${catkin_LIBRARIES}
 #)

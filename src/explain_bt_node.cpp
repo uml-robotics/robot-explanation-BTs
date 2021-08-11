@@ -27,7 +27,13 @@ int main (int argc, char **argv)
    auto tree = factory.createTreeFromFile("/root/catkin_ws/src/explain_bt/src/my_tree.xml");
    ROS_INFO("BT created from file.");
 
-   tree.root_node->executeTick();
+   // This executeTick method runs the BT without explainability
+   // tree.root_node->executeTick();
+   
+   // This option runs the BT with explainability
+   ExplainableBT explainable_bt(tree);
+   explainable_bt.execute();
+
 
    return 0;
 }
