@@ -101,7 +101,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES explainBT
+  LIBRARIES explain_bt
   CATKIN_DEPENDS roscpp behaviortree_cpp_v3
 #  DEPENDS system_lib
 )
@@ -118,9 +118,9 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/main_service.cpp
-# )
+add_library(dummy_nodes STATIC
+  src/dummy_nodes.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -130,7 +130,9 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/${PROJECT_NAME}_node.cpp src/hello_BT.cpp)
+add_executable(${PROJECT_NAME}_node src/${PROJECT_NAME}_node.cpp)
+#add_executable(hello_BT src/hello_BT.cpp)
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -141,11 +143,16 @@ add_executable(${PROJECT_NAME}_node src/${PROJECT_NAME}_node.cpp src/hello_BT.cp
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_node_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_dependencies(hello_BT ${hello_BT_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
+   dummy_nodes
    ${catkin_LIBRARIES}
 )
+#target_link_libraries(hello_BT
+#   ${catkin_LIBRARIES}
+#)
 
 #############
 ## Install ##

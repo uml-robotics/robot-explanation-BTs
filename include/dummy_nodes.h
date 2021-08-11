@@ -1,62 +1,80 @@
-#pragma once
+#ifndef SIMPLE_BT_NODES_H
+#define SIMPLE_BT_NODES_H
 
-#include <behaviortree_cpp_v3/action_node.h>
-#include <behaviortree_cpp_v3/bt_factory.h>
-// #include "countdown.h"
-
-using namespace BT;
+#include "behaviortree_cpp_v3/behavior_tree.h"
+#include "behaviortree_cpp_v3/bt_factory.h"
 
 namespace DummyNodes
 {
-    // Example of custom SyncActionNode (synchronous action)
-    // without ports.
-    class ApproachObject : public BT::SyncActionNode
+
+BT::NodeStatus CheckBattery();
+
+class GripperInterface
+{
+  public:
+    GripperInterface() : _opened(true)
     {
-      public:
-        ApproachObject(const std::string& name) :
-            BT::SyncActionNode(name, {})
-        {
-        }
-
-        // You must override the virtual function tick()
-        BT::NodeStatus tick() override
-        {
-            std::cout << "ApproachObject: " << this->name() << std::endl;
-            //countdown(5);
-            return BT::NodeStatus::SUCCESS;
-        }
-    };
-
-
-    // Simple function that return a NodeStatus
-    BT::NodeStatus CheckBattery()
-    {
-        std::cout << "[ Battery: OK ]" << std::endl;
-        //countdown(5);
-        return BT::NodeStatus::SUCCESS;
     }
 
-    // We want to wrap into an ActionNode the methods open() and close()
-    class GripperInterface
+    BT::NodeStatus open();
+
+    BT::NodeStatus close();
+
+  private:
+    bool _opened;
+};
+
+//--------------------------------------
+
+// Example of custom SyncActionNode (synchronous action)
+// without ports.
+class ApproachObject : public BT::SyncActionNode
+{
+  public:
+    ApproachObject(const std::string& name) :
+        BT::SyncActionNode(name, {})
     {
-      public:
-        GripperInterface(): _open(true) {}
+    }
 
-        NodeStatus open() {
-            _open = true;
-            std::cout << "GripperInterface::open" << std::endl;
-            //countdown(10);
-            return NodeStatus::SUCCESS;
-        }
+    // You must override the virtual function tick()
+    BT::NodeStatus tick() override;
+};
 
-        NodeStatus close() {
-            std::cout << "GripperInterface::close" << std::endl;
-            _open = false;
-            //countdown(5);
-            return NodeStatus::SUCCESS;
-        }
+// Example of custom SyncActionNode (synchronous action)
+// with an input port.
+class SaySomething : public BT::SyncActionNode
+{
+  public:
+    SaySomething(const std::string& name, const BT::NodeConfiguration& config)
+      : BT::SyncActionNode(name, config)
+    {
+    }
 
-      private:
-        bool _open; // shared information
-    };
+    // You must override the virtual function tick()
+    BT::NodeStatus tick() override;
+
+    // It is mandatory to define this static method.
+    static BT::PortsList providedPorts()
+    {
+        return{ BT::InputPort<std::string>("message") };
+    }
+};
+
+//Same as class SaySomething, but to be registered with SimpleActionNode
+BT::NodeStatus SaySomethingSimple(BT::TreeNode& self);
+
+
+inline void RegisterNodes(BT::BehaviorTreeFactory& factory)
+{
+    static GripperInterface grip_singleton;
+
+    factory.registerSimpleCondition("CheckBattery", std::bind(CheckBattery));
+    factory.registerSimpleAction("OpenGripper", std::bind(&GripperInterface::open, &grip_singleton));
+    factory.registerSimpleAction("CloseGripper", std::bind(&GripperInterface::close, &grip_singleton));
+    factory.registerNodeType<ApproachObject>("ApproachObject");
+    factory.registerNodeType<SaySomething>("SaySomething");
 }
+
+} // end namespace
+
+#endif   // SIMPLE_BT_NODES_H

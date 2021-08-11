@@ -24,8 +24,10 @@ int main (int argc, char **argv)
    
    ROS_INFO("Explainble BT node started.");
       
-   auto tree = factory.createTreeFromFile("./my_tree.xml");
+   auto tree = factory.createTreeFromFile("/root/catkin_ws/src/explain_bt/src/my_tree.xml");
    ROS_INFO("BT created from file.");
+
+   tree.root_node->executeTick();
 
    return 0;
 }
