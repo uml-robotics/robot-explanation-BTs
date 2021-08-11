@@ -1,6 +1,6 @@
  <root main_tree_to_execute = "MainTree" >
      <BehaviorTree ID="MainTree">
-        <Sequence name="root_sequence">
+        <Sequence name="collect_object">
             <CheckBattery   name="check_battery"/>
             <OpenGripper    name="open_gripper"/>
             <ApproachObject name="approach_object"/>
