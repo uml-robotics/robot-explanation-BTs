@@ -8,7 +8,10 @@ project(explain_bt)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp message_generation behaviortree_cpp_v3
+  roscpp
+  message_generation
+  std_msgs
+  behaviortree_cpp_v3
 )
 
 ## System dependencies are found with CMake's conventions
