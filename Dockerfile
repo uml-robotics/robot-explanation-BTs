@@ -1,7 +1,7 @@
 FROM ros:noetic
 
 LABEL   maintainer="Tammer Barkouki" \
-        name="explainablerobot"
+        name="thbarkouki/explainablerobot"
 
 ENV DEBAIN_FRONTEND noninteractive
 
