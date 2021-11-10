@@ -4,7 +4,7 @@ This reposotory contains code and the behavior trees in XML for the following pa
 
  - Zhao Han, Daniel Giger, Jordan Allspaw, Michael S. Lee, Henny Admoni, and Holly A. Yanco. __Building The Foundation of Robot Explanation Generation Using Behavior Trees__.
 
-Everything other than the code is available at https://cs.uml.edu/~zhan/#re-bt.
+Everything other than the code is available at https://inside.mines.edu/~zhaohan/#re-bt.
 
 ## Code
 
