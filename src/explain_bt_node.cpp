@@ -22,7 +22,7 @@ int main (int argc, char **argv)
    factory.registerSimpleAction("CloseGripper", 
                                  std::bind(&GripperInterface::close, &gripper));
    
-   auto tree = factory.createTreeFromFile("/root/catkin_ws/src/explain_bt/src/my_tree.xml");
+   auto tree = factory.createTreeFromFile("/root/catkin_ws/src/robot-explanation-BTs/src/my_tree.xml");
    ROS_INFO("BT created from file.");
 
    ExplainableBT explainable_tree(tree);

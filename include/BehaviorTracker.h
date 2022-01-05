@@ -16,7 +16,7 @@ public:
 
     BT::TreeNode* get_running_node() {
         BT::TreeNode *running_node = nullptr;
-        BT::applyRecursiveVisitor(tree.root_node, [this, &running_node](BT::TreeNode* node_visiting) {
+        BT::applyRecursiveVisitor(tree.rootNode(), [this, &running_node](BT::TreeNode* node_visiting) {
             if (running_node != nullptr) {
                 return;
             }
@@ -40,7 +40,7 @@ public:
     }
 
     BT::TreeNode* get_overall_goal_node() {
-        return tree.root_node;
+        return tree.rootNode();
     }
 
     BT::TreeNode* get_tree_parent() {

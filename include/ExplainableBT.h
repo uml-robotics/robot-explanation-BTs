@@ -49,12 +49,12 @@ private:
 
 class ExplainableBT {
 public:
-    explicit ExplainableBT(const BT::Tree & tree) : tree(tree), behavior_tracker(tree) {
-        printTreeRecursively(tree.root_node);
+    explicit ExplainableBT(BT::Tree & tree) : tree(tree), behavior_tracker(tree) {
+        BT::printTreeRecursively(tree.rootNode());
     }
 
     BT::NodeStatus execute() {
-        return tree.root_node->executeTick();
+        return tree.tickRoot();
     }
 
     bool explain_callback(explain_bt::Explain::Request &req, explain_bt::Explain::Response &res) {
@@ -101,7 +101,7 @@ public:
         }
         else if (q == "How do you achieve your goal?" || q == "What are the steps for your goal") {
             std::string goal = behavior_tracker.get_overall_goal_node()->name();
-            std::vector<BT::TreeNode*> steps = find_steps(tree.root_node);
+            std::vector<BT::TreeNode*> steps = find_steps(tree.rootNode());
             a = "To achieve the goal \"" + goal + "\", I need to do " + std::to_string(steps.size()) + " steps. ";
             for (int i = 0; i < steps.size(); ++i) {
                 a += std::to_string(i+1) + ". " + steps.at(i)->name() + ". ";
@@ -234,7 +234,7 @@ public:
             // get tree parent
             BT::TreeNode* tree_parent = behavior_tracker.get_tree_parent();
             if (tree_parent == nullptr)
-                tree_parent = tree.root_node;
+                tree_parent = tree.rootNode();
             ROS_INFO_STREAM("tree parent: " + tree_parent->short_description());
 
             // build supported nodes
@@ -366,6 +366,6 @@ private:
         return steps;
     }
 
-    const BT::Tree &tree;
+    BT::Tree &tree;
     BehaviorTracker behavior_tracker;
 };
